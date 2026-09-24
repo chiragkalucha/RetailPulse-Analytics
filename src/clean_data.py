@@ -31,6 +31,14 @@ def clean_retail_data(df:pd.DataFrame)->pd.DataFrame:
     
     df['Description']=df['Description'].fillna('Unknown')
     df=df.drop_duplicates()
+    
+    df['StockCode']=df['StockCode'].replace({'m':'M'})
+    
+    codes_to_drop=['TEST001', 'TEST002', 'BANK CHARGES', 'AMAZONFEE', 'S']
+    df=df[~df['StockCode'].isin(codes_to_drop)]
+    
+    codes_to_flag=['POST', 'DOT', 'C2', 'D', 'ADJUST', 'ADJUST2', 'M']
+    df['is_non_product']=df['StockCode'].isin(codes_to_flag)
     return df
 
 if __name__=="__main__":
@@ -39,3 +47,8 @@ if __name__=="__main__":
     
     clean_df=clean_retail_data(raw_df)
     print(f"Clean data: {clean_df.shape}")
+    
+    output_path="data/processed/online_retail_cleaned.csv"
+    clean_df.to_csv(output_path, index=False)
+    print(f"Cleaned data saved to :{output_path}")
+    
