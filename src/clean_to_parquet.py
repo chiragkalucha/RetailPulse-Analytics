@@ -12,8 +12,8 @@ for col in ["Invoice", "StockCode"]:
 
 # Customer ID is float because of missing values; keep it as a nullable integer
 df["Customer ID"] = df["Customer ID"].astype("Int64")
-
-df.to_parquet(OUT, index=False)
+df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
+print(list(df.columns))
 df.to_parquet(OUT, index=False)
 print(df.shape)
 print(df.dtypes)
